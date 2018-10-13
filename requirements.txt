@@ -1,0 +1,9 @@
+# requirements for fitness application to run
+
+#Tkinter
+
+#SQLite
+
+#matplotlib
+
+#numpy
