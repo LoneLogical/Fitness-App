@@ -66,6 +66,9 @@ instance/
 # SQLite
 *.sqlite
 
+# Pickle Binary Files
+*.pk
+
 # Sphinx documentation
 docs/_build/
 
