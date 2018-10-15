@@ -30,8 +30,11 @@ for i in range(len(data)):
 
 def add_entry():
     user_date = data_entries['Date'].get()
+    data_entries['Date'].delete(0, len(user_date))
     user_dist = data_entries['Distance'].get()
+    data_entries['Distance'].delete(0, len(user_dist))
     user_time = data_entries['Time'].get()
+    data_entries['Time'].delete(0, len(user_time))
     print(user_date)
     print(user_dist)
     print(user_time)
