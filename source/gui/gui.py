@@ -1,7 +1,9 @@
 # source/gui/gui.py
 
 from tkinter import *
+from tkinter import scrolledtext
 from tkinter import ttk
+from . import ex_query
 
 
 class Tab:
@@ -21,7 +23,7 @@ class Log(Tab):
     def __init__(self, tab_control):
         Tab.__init__(self, tab_control=tab_control)
         header = Label(self.tab, text="Become a warrior!", font=("Franklin Gothic", 22))
-        header.grid(column=0, row=0)
+        header.grid(column=0, row=0, columnspan=2)
 
         data = ['Date', 'Distance', 'Time']
         data_text = ['Date (MM-DD-YYYY)', 'Distance (miles)', 'Time (hour:min:sec)']
@@ -32,13 +34,15 @@ class Log(Tab):
 
         for i in range(len(data)):
             d_lbl = Label(self.tab, text=data_text[i])
-            d_lbl.grid(column=0, row=current_row)
+            d_lbl.grid(column=0, row=current_row, padx=2)
             data_labels[data[i]] = d_lbl
-            current_row += 1
             d_entry = Entry(self.tab, width=15)
-            d_entry.grid(column=0, row=current_row)
+            d_entry.grid(column=1, row=current_row, padx=2)
             data_entries[data[i]] = d_entry
             current_row += 1
+
+        txt_box = scrolledtext.ScrolledText(self.tab, width=40, height=20)
+        txt_box.grid(column=2, row=1, rowspan=3)
 
         def add_entry():
             user_date = data_entries['Date'].get()
@@ -47,12 +51,34 @@ class Log(Tab):
             data_entries['Distance'].delete(0, len(user_dist))
             user_time = data_entries['Time'].get()
             data_entries['Time'].delete(0, len(user_time))
-            print(user_date)
-            print(user_dist)
-            print(user_time)
+            # clear scrolled text box
+            txt_box.delete(1.0, END)
+            entry_str = user_date + ' -- ' + user_dist + ' -- ' + user_time + '\n'
+
+            entry_added = True  # will eventually call db function instead
+            if entry_added:
+                entry_str += "Was added to the database"
+            else:
+                entry_str += "Error occurred and was not added to the database"
+
+            txt_box.insert(INSERT, entry_str)
+
+        def search_entry():
+            # grab user inputs from data entries
+            # call db function to get query results
+            entry_str = ''
+            for ex in ex_query:
+                ex_str = str(ex[0]) + ' -- ' + str(ex[1]) + ' -- ' + str(ex[2]) + '\n'
+                entry_str += ex_str
+
+            txt_box.delete(1.0, END)
+            txt_box.insert(INSERT, entry_str)
 
         btn_add_entry = Button(self.tab, text="Add Entry", command=add_entry)
         btn_add_entry.grid(column=0, row=current_row)
+
+        btn_search_entry = Button(self.tab, text="Search", command=search_entry)
+        btn_search_entry.grid(column=1, row=current_row)
 
 
 class Stats(Tab):
